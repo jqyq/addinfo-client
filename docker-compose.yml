@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  addinfo-client:
+    build: .
+    container_name: addinfo-client
+    hostname: addinfo-client
+    image: addinfo-client
+    ports:
+      - "80:80"
