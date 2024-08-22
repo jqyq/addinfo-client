@@ -9,7 +9,7 @@ use axum::{serve, Router};
 use dotenv::{dotenv, var};
 use heartbeat_thread::heartbeat_thread;
 
-use tokio::main;
+use tokio::{fs, main};
 use tokio::net::TcpListener;
 use tracing::Level;
 use tracing_subscriber::fmt::format::FmtSpan;
@@ -42,6 +42,11 @@ async fn main() -> Result<()> {
     // In AddInfo, this often is referred to as the virtual directory.
     // It's the first segment of the URL path, e.g. api.
     let path = Env::get_client_path();
+
+    // If debugging is enabled we need to ensure to first create the debug directory.
+    if Env::get_pretty_print_xml_to_disk() {
+        fs::create_dir_all(Env::get_debug_dir()).await?;
+    }
 
     // We always start with an empty state as we
     // don't intend to store any messages to disk.

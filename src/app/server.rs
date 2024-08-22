@@ -1,12 +1,17 @@
+use std::{fs::File, path::Path};
+
+use anyhow::Result;
 use axum::{
     body::Bytes,
     extract::State,
     response::{Html, IntoResponse},
 };
+use chrono::Local;
 use itertools::Itertools;
 use quick_xml::se::Serializer;
 use serde::Serialize;
 use tracing::{error, info, instrument};
+use xmltree::{Element, EmitterConfig};
 
 use crate::app::error::AppError;
 use crate::xml::{
@@ -14,7 +19,7 @@ use crate::xml::{
     itd_request::{ItdRequestCurrentMessages, ItdRequestDelivery},
 };
 
-use super::{client::AddInfoClient, state::AppState};
+use super::{client::AddInfoClient, env::Env, state::AppState};
 
 // Root element name for XML serialization of the request body.
 pub const ITD_REQUEST: &str = "itdRequest";
@@ -58,6 +63,10 @@ pub async fn soapaction(
     State(state): State<AppState>,
     bytes: Bytes,
 ) -> Result<impl IntoResponse, AppError> {
+    if let Err(e) = pretty_print_xml_to_disk(bytes.as_ref()) {
+        error!("failed to pretty print xml to disk: {e}");
+    }
+
     match AddInfoClient::deserialize::<ItdRequestDelivery>(&bytes).await {
         Ok(delivery) => {
             delivery.persist(&state).await;
@@ -68,6 +77,23 @@ pub async fn soapaction(
             Err(e.into())
         }
     }
+}
+
+// For debugging purposes we pretty print the incoming messages to disk.
+fn pretty_print_xml_to_disk(bytes: &[u8]) -> Result<()> {
+    // Make this configurable via an environment variable.
+    if Env::get_pretty_print_xml_to_disk() {
+        // Use chronological file names. We might want to improve file naming.
+        let now = Local::now().format("%y%m%d_%H%M%S");
+        let path = Path::new(&Env::get_debug_dir()).join(format!("{}.xml", now));
+        let mut file = File::create(path)?;
+        let config = EmitterConfig::new().perform_indent(true);
+
+        // Pretty print XML with indentation.
+        Element::parse(bytes.as_ref())?.write_with_config(&mut file, config)?;
+    }
+
+    Ok(())
 }
 
 // We need to implement the XML_ADDINFO_REQUEST of EFA in order to let ICS know

@@ -80,4 +80,14 @@ impl Env {
             .and_then(|p| p.parse().ok())
             .unwrap_or(5)
     }
+
+    // Write debug files to this directory.
+    pub fn get_debug_dir() -> String {
+        var("DEBUG_DIR").unwrap_or("debug".into())
+    }
+
+    // Should we pretty print XML exchanges to disk?
+    pub fn get_pretty_print_xml_to_disk() -> bool {
+        var("PRETTY_PRINT_XML_TO_DISK").is_ok_and(|s| s.parse().unwrap_or_default())
+    }
 }

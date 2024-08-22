@@ -52,10 +52,10 @@ impl AddInfoClient {
             .body(buffer)
             .send()
             .await?;
-        dbg!(&response);
 
         // We assume the subscription was set up successfully if a HTTP 2XX status code is returned.
         if response.status().is_success() {
+            info!("subscription is now active");
             Ok(())
         } else {
             bail!("bad response")

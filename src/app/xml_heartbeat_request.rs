@@ -1,5 +1,5 @@
 use anyhow::{bail, Result};
-use tracing::{info, instrument};
+use tracing::{debug, info, instrument};
 
 use super::client::AddInfoClient;
 
@@ -14,9 +14,10 @@ impl AddInfoClient {
         info!("{}", url);
 
         let response = self.client.get(url).send().await?;
-        dbg!(&response);
+        debug!("{:?}", &response);
 
         if response.status().is_success() {
+            info!("server side replied with a heartbeat");
             Ok(())
         } else {
             bail!("bad response")
