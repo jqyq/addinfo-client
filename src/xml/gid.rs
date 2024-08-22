@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 pub struct Gid {
     #[serde(
         rename = "@selected",
-        default,
         deserialize_with = "crate::xml::string_into_bool_infallible"
     )]
     selected: bool,

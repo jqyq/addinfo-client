@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 pub struct Place {
     #[serde(
         rename = "@selected",
-        default,
         deserialize_with = "crate::xml::string_into_bool_infallible"
     )]
     selected: bool,
