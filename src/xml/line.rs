@@ -23,7 +23,7 @@ pub struct Line {
 
     #[serde(rename = "@direction")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
-    direction: Option<String>,
+    direction: Option<char>,
 
     #[serde(rename = "@directionName")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
@@ -39,19 +39,19 @@ pub struct Line {
 
     #[serde(rename = "@motType")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
-    mot_type: Option<String>,
+    mot_type: Option<u32>,
 
     #[serde(rename = "@motCode")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
-    mot_code: Option<String>,
+    mot_code: Option<u32>,
 
     #[serde(rename = "@productId")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
-    product_id: Option<String>,
+    product_id: Option<u32>,
 
     #[serde(rename = "@mtSubcode")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
-    mt_subcode: Option<String>,
+    mt_subcode: Option<u32>,
 
     #[serde(rename = "@routeDescText")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]

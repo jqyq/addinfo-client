@@ -9,6 +9,7 @@ use super::{
     validity_period::ValidityPeriod,
 };
 
+// By default we assume all bools are false if not provided in the source data.
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(default, rename_all = "camelCase")]
 pub struct ItdAdditionalTravelInformation {
@@ -20,6 +21,10 @@ pub struct ItdAdditionalTravelInformation {
     #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
     pub author_id: Option<u32>,
 
+    #[serde(rename = "@authorSymbol")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub author_symbol: Option<String>,
+
     #[serde(rename = "@authorFirstName")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
     pub author_first_name: Option<String>,
@@ -27,6 +32,14 @@ pub struct ItdAdditionalTravelInformation {
     #[serde(rename = "@authorName")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
     pub author_name: Option<String>,
+
+    #[serde(rename = "@lastModifierID")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub last_modifier_id: Option<u32>,
+
+    #[serde(rename = "@lastModifierSymbol")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub last_modifier_symbol: Option<String>,
 
     #[serde(rename = "@lastModifierFirstName")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
@@ -44,6 +57,7 @@ pub struct ItdAdditionalTravelInformation {
     pub info_id: Option<String>,
 
     #[serde(rename = "@seqID")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
     pub seq_id: Option<u32>,
 
     #[serde(rename = "@deactivated")]
@@ -84,13 +98,14 @@ pub struct ItdAdditionalTravelInformation {
     pub use_as_banner_info: bool,
 
     #[serde(rename = "@blockingType")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
     pub blocking_type: Option<u32>,
 
     pub source_system: SourceSystem,
 
     pub partial_nets: PartialNets,
 
-    #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
     pub effect_condition: Option<String>,
 
     pub creation_time: CreationTime,

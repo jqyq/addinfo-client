@@ -155,7 +155,7 @@ impl ItdRequestDelivery {
                     if Some(seq) > curr_seq {
                         wlock.insert(id, seq);
                     } else {
-                        // Unwrapping is safe as curr_seq can't be None in the else branch.
+                        // Unwrapping is safe as curr_seq can't be `None` in the else branch.
                         warn!("seq {} not higher than curr seq {}", seq, curr_seq.unwrap());
                     }
                 }

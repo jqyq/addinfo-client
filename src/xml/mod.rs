@@ -87,8 +87,6 @@ where
         // Fields for which deserialization has failed will be
         // treated as if they hadn't been there in the first place.
         Err(e) => {
-            // Logging this as a warning may be undesired given ICS
-            // will intentionally send invalid values in some occasions.
             warn!("failed to deserialize into {}: {e}", type_name::<T>());
             // Suppress the error so that deserialization of other data can proceed.
             Ok(None)
