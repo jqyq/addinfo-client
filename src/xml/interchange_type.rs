@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 pub enum InterchangeType {
     Elevator,
     Escalators,
+    Illuminated,
     Level,
+    Ramp,
     Stairs,
 }
