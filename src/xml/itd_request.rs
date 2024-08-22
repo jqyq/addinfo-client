@@ -95,8 +95,10 @@ impl ItdRequest {
         // We need write access to the messages we hold.
         let mut wlock = state.messages.write().await;
 
-        // We simply overwrite the seqID without checking if the new one is actually higher
-        // than the current one we have. We rely on a proper server side implementation.
+        // Our implementation only retrieves all messages once at the very start.
+        // Hence, we blindly insert what we get and don't check the seqID order.
+        // This would require storing the messages to disk, which we don't do.
+        // However, for any deliveries via push, we do infact do those checks.
         for (info_id, seq_id) in messages {
             info!("got msg {} seq {}", &info_id, &seq_id);
             wlock.insert(info_id, seq_id);
