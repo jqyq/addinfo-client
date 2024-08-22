@@ -16,6 +16,26 @@ pub struct ItdAdditionalTravelInformation {
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
     pub ty: Option<MessageType>,
 
+    #[serde(rename = "@authorID")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub author_id: Option<u32>,
+
+    #[serde(rename = "@authorFirstName")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub author_first_name: Option<String>,
+
+    #[serde(rename = "@authorName")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub author_name: Option<String>,
+
+    #[serde(rename = "@lastModifierFirstName")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub last_modifier_first_name: Option<String>,
+
+    #[serde(rename = "@lastModifierName")]
+    #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
+    pub last_modifier_name: Option<String>,
+
     #[serde(rename = "@providerCode")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_verbose")]
     pub provider_code: Option<String>,
