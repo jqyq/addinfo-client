@@ -6,7 +6,6 @@ use super::{itd_date::ItdDate, itd_time::ItdTime};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(default, rename_all = "camelCase")]
-
 pub struct ItdDateTime {
     #[serde(rename = "@utc")]
     #[serde(deserialize_with = "crate::xml::try_deserialize_silent")]
