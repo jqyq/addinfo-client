@@ -18,7 +18,7 @@ pub struct Line {
     name: Option<String>,
 
     #[serde(rename = "@supplement")]
-    #[serde(deserialize_with = "maybe_deserialize_supplement")]
+    #[serde(deserialize_with = "try_deserialize_supplement")]
     supplement: Option<char>,
 
     #[serde(rename = "@direction")]
@@ -70,7 +70,7 @@ pub struct Line {
 }
 
 // A space character indicates a line with no supplement.
-fn maybe_deserialize_supplement<'de, D>(d: D) -> Result<Option<char>, D::Error>
+fn try_deserialize_supplement<'de, D>(d: D) -> Result<Option<char>, D::Error>
 where
     D: Deserializer<'de>,
 {
