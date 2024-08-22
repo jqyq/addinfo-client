@@ -9,8 +9,8 @@ use axum::{serve, Router};
 use dotenv::{dotenv, var};
 use heartbeat_thread::heartbeat_thread;
 
-use tokio::{fs, main};
 use tokio::net::TcpListener;
+use tokio::{fs, main};
 use tracing::Level;
 use tracing_subscriber::fmt::format::FmtSpan;
 

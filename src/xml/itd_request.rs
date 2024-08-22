@@ -1,6 +1,6 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
-use tracing::info;
+use tracing::{info, warn};
 
 use crate::app::state::AppState;
 
@@ -137,19 +137,25 @@ impl ItdRequestDelivery {
         // It might be worth to log any messages that don't fulfil these requirements.
         single
             .chain(chunk)
-            .filter_map(|m| Some((m.ty?, m.info_id?, m.seq_id?)))
-            .for_each(move |(ty, id, seq)| {
-                if ty == MessageType::Clearance {
-                    // A clearance indicates a message was removed.
+            .filter_map(|m| Some((m.ty?, m.info_id?, m.seq_id?, m.deactivated)))
+            .for_each(move |(ty, id, seq, deactivated)| {
+                if deactivated || ty == MessageType::Clearance {
                     info!("got clr {} seq {}", &id, &seq);
                     wlock.remove(&id);
                 } else {
-                    // Any other message we treate as a new one. Please note that
-                    // we blindly insert the message without checking the provided
+                    // We blindly insert the message without checking the provided
                     // seqID is actually higher than the one we currently have. A
                     // sophisticated implementation should do this check of course.
                     info!("got msg {} seq {}", &id, &seq);
-                    wlock.insert(id, seq);
+
+                    let curr_seq = wlock.get(&id).copied();
+
+                    if Some(seq) > curr_seq {
+                        wlock.insert(id, seq);
+                    } else {
+                        // Unwrapping is safe as curr_seq can't be None in the else branch.
+                        warn!("seq {} not higher than curr seq {}", seq, curr_seq.unwrap());
+                    }
                 }
             });
     }
