@@ -145,14 +145,12 @@ impl ItdRequestDelivery {
                     info!("got clr {} seq {}", &id, &seq);
                     wlock.remove(&id);
                 } else {
-                    // We blindly insert the message without checking the provided
-                    // seqID is actually higher than the one we currently have. A
-                    // sophisticated implementation should do this check of course.
                     info!("got msg {} seq {}", &id, &seq);
 
                     let curr_seq = wlock.get(&id).copied();
 
                     if Some(seq) > curr_seq {
+                        // We only insert messages with a higher seqID.
                         wlock.insert(id, seq);
                     } else {
                         // Unwrapping is safe as curr_seq can't be `None` in the else branch.
